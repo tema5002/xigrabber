@@ -6,7 +6,8 @@
 
 void read_xi_instrument(file_buffer fb, xi_instrument* inst) {
     const uint32_t header_size = read_uint32(fb);
-    read_bytes(fb, inst->name, 22);
+    read_bytes(fb, inst->name, INSTRUMENT_NAME_SIZE);
+    inst->name[INSTRUMENT_NAME_SIZE] = '\0';
     skip_bytes(fb, 1); // Instrument type
     inst->samples.size = read_uint16(fb);
     if (inst->samples.size > 0) {
@@ -39,7 +40,8 @@ void read_xi_instrument(file_buffer fb, xi_instrument* inst) {
     }
 }
 
-void free_xi_instrument(xi_instrument* inst) {
+void free_xi_instrument(const xi_instrument* inst) {
+    if (inst->samples.size == 0) return;
     for (uint16_t i = 0; i < inst->samples.size; i++) {
         const uint32_t size = UINT32_LE(inst->samples.data[i].header);
         if (size > 0) {
@@ -59,7 +61,7 @@ void skip_xm_pattern(file_buffer fb) {
     skip_bytes(fb, packed_size);
 }
 
-void process_xm(file_buffer fb, STRING input, STRING output, const bool verbose) {
+void process_xm(const file_buffer fb, STRING input, STRING output, const bool verbose) {
     skip_bytes(fb,
         17 // "Extended Module: "
     );
@@ -93,6 +95,8 @@ void process_xm(file_buffer fb, STRING input, STRING output, const bool verbose)
     }
     DEBUGC("Skipped %u patterns.\n", patterns)
 
+    input=GET_FILENAME(input);
+
     const size_t dest_size =
         STRLEN(output) + // %s
         1 +              // /
@@ -103,23 +107,22 @@ void process_xm(file_buffer fb, STRING input, STRING output, const bool verbose)
         1;               // \0
 
     STRING dest = safe_malloc(
-#ifdef WINDOWS
-        2 *
-#endif
-        dest_size
+        sizeof(STRING_CHAR) * dest_size
     );
     for (uint16_t i = 0; i < instruments; i++) {
-        DEBUGC("Reading instrument %u...\n", i);
+        DEBUGC("Reading instrument %u...\n", i + 1);
         xi_instrument inst;
         read_xi_instrument(fb, &inst);
-        SPRINT(dest, dest_size, XI_PATH_FORMAT, output, input, i);
+        char* s = "s";
+        if (inst.samples.size == 1) s++;
+        DEBUGC("Read instrument '%s' with %u sample%s.\n", inst.name, inst.samples.size, s);
+
+        SPRINT(dest, dest_size, XI_PATH_FORMAT, output, input, i + 1);
         DEBUG(SAVING_INSTRUMENT_TEXT, dest);
-        string_buffer buf;
-        make_string_buffer(&buf, 512);
-        build_xi(&inst, &buf);
-        const size_t bytes = buf.len;
-        write_string_buffer_to_file(&buf, dest);
+
+        const size_t bytes = build_xi_and_write_to_file(&inst, dest);
         DEBUGC("Saved %zu total bytes.\n", bytes);
+
         free_xi_instrument(&inst);
     }
     free(dest);

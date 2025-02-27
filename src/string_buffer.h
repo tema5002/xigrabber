@@ -42,9 +42,9 @@ void append_byte_to_string_buffer(string_buffer* buf, const char c) {
 }
 
 void write_string_buffer_to_file(const string_buffer* buf, STRING fp) {
-    FILE* file = safe_open_w(fp);
-    safe_fwrite(buf->str, buf->len, file);
-    fclose(file);
+    FILE_HANDLE file = safe_open_w(fp);
+    safe_write(buf->str, buf->len, file);
+    CLOSE_FILE(file);
     free(buf->str);
 }
 

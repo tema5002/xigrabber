@@ -4,7 +4,7 @@ CFLAGS=-Wall -Wextra -Werror -std=c11
 
 MINGW_CC=x86_64-w64-mingw32-gcc
 MINGW_TARGET=$(TARGET).exe
-MINGW_CFLAGS=$(CFLAGS) -municode -Wl,--subsystem,console
+MINGW_CFLAGS=$(CFLAGS) -municode -Wl,--subsystem,console -lshlwapi
 
 SRC=src/main.c
 SRCS=$(SRC) src/*.h
@@ -15,4 +15,4 @@ $(TARGET): $(SRCS)
 $(MINGW_TARGET): $(SRCS)
 	$(MINGW_CC) $(SRC) -o $(MINGW_TARGET) $(MINGW_CFLAGS)
 
-all: $(MINGW_TARGET) $(TARGET)
+all: $(TARGET) $(MINGW_TARGET)

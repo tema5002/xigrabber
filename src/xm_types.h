@@ -6,7 +6,7 @@ typedef struct xi_sample {
 } xi_sample;
 
 typedef struct xi_instrument {
-    uint8_t name[22];
+    char name[INSTRUMENT_NAME_SIZE + 1];
     uint8_t header[XI_HEADER_SIZE];
 
     struct {

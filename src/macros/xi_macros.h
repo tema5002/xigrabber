@@ -8,7 +8,7 @@
     1 +  /* volume sustain point           */\
     1 +  /* volume loop start point        */\
     1 +  /* volume loop end point          */\
-    1 +  /* panning sutain point           */\
+    1 +  /* panning sustain point           */\
     1 +  /* panning loop start point       */\
     1 +  /* panning loop end point         */\
     1 +  /* volume type                    */\
@@ -31,4 +31,6 @@
     1 +  /* relative note      */\
     1 +  /* reserved           */\
     22   /* name               */)
+
+#define INSTRUMENT_NAME_SIZE 22
 #endif

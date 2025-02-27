@@ -1,11 +1,7 @@
 #pragma once
 
 #ifdef WINDOWS
-#include <wchar.h>
-#endif
-
-#ifdef WINDOWS
-    #define FAILED_TO_OPEN_TEXT L"Failed to open '%S' in '%S' mode"
+    #define FAILED_TO_OPEN_TEXT L"Failed to open '%S'."
     #define UNKNOWN_OPTION_TEXT L"Unknown option: '%S'\nTry '%S --help'.\n"
     #define NO_INPUT_FILE_TEXT L"Error: No input file specified.\nTry '%S --help'.\n"
     #define VERBOSE_MODE_ENABLED_TEXT L"Verbose mode enabled.\n"
@@ -19,7 +15,7 @@
     #define END_OF_FILE_TEXT L"Error: reached end of the file\n"
     #define SAVING_INSTRUMENT_TEXT L"Saving instrument to '%S'...\n"
 #else
-    #define FAILED_TO_OPEN_TEXT "Failed to open '%s' in '%s' mode"
+    #define FAILED_TO_OPEN_TEXT "Failed to open '%s'."
     #define UNKNOWN_OPTION_TEXT "Unknown option: '%s'\nTry '%s --help'.\n"
     #define NO_INPUT_FILE_TEXT "Error: No input file specified.\nTry '%s --help'.\n"
     #define VERBOSE_MODE_ENABLED_TEXT "Verbose mode enabled.\n"
@@ -35,10 +31,7 @@
 #endif
 
 #ifdef WINDOWS
-    #define READ_FMODE L"r"
-    #define WRITE_FMODE L"w"
-
-    #define XI_PATH_FORMAT L"%s\\%s-%02X.xi"
+    #define XI_PATH_FORMAT L"%S\\%S-%02X.xi"
 
     #define CURRENT_DIR L"."
     #define DASH L'-'
@@ -50,9 +43,6 @@
     #define VERBOSE1 L"-v"
     #define VERBOSE2 L"--verbose"
 #else
-    #define READ_FMODE "r"
-    #define WRITE_FMODE "w"
-
     #define XI_PATH_FORMAT "%s/%s-%02X.xi"
 
     #define CURRENT_DIR "."
@@ -68,14 +58,16 @@
 
 #ifdef WINDOWS
     #define PRINT wprintf
-    #define STRING wchar_t*
+    #define STRING_CHAR wchar_t
+    #define STRING STRING_CHAR*
     #define STRCMP wcscmp
     #define VFPRINT vfwprintf
     #define SPRINT swprintf
     #define STRLEN wcslen
 #else
     #define PRINT printf
-    #define STRING char*
+    #define STRING_CHAR char
+    #define STRING STRING_CHAR*
     #define STRCMP strcmp
     #define VFPRINT vfprintf
     #define SPRINT snprintf

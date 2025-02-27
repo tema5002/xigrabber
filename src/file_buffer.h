@@ -9,15 +9,13 @@ typedef struct file_buffer {
 }* file_buffer;
 
 file_buffer create_file_buffer(STRING filename) {
-    FILE* file = safe_open_r(filename);
+    FILE_HANDLE file = safe_open_r(filename);
 
-    fseek(file, 0, SEEK_END);
-    const size_t filesize = ftell(file);
-    fseek(file, 0, SEEK_SET);
+    const long filesize = get_filesize(file);
 
     uint8_t* buffer = safe_malloc(filesize);
-    safe_fread(buffer, filesize, file);
-    fclose(file);
+    safe_read(buffer, filesize, file);
+    CLOSE_FILE(file);
 
     const file_buffer fb = safe_malloc(sizeof(struct file_buffer));
     fb->begin = buffer;

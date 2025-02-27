@@ -1,6 +1,5 @@
 # XIGrabber
 **XIGrabber** is a CLI utility to extract extended instruments (XI) from FastTracker 2 extended modules (XM) files.\
-Not windows compatible yet. Probably.
 
 ## Compiling
 ```bash

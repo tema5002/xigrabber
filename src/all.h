@@ -1,29 +1,40 @@
 #pragma once
 
-#define XIGRABBER_VERSION "XIGrabber v1.0.0    "
+#define XIGRABBER_VERSION "XIGrabber v2.0.0    "
 #if defined(_WIN32) || defined(_WIN64)
-#define WINDOWS
+    #define WINDOWS
 #endif
 
 #ifdef WINDOWS
-#define MAIN wmain
+    #define MAIN wmain
 #else
-#define MAIN main
+    #define MAIN main
+#endif
+
+#ifdef WINDOWS
+    #include <direct.h>
+    #include <io.h>
+    #include <windows.h>
+    #include <shlwapi.h>
+    #include <wchar.h>
+#else
+    #include <stdlib.h>
+    #include <string.h>
+    #include <strings.h>
+    #include <sys/stat.h>
+    #include <unistd.h>
+    #include <libgen.h>
 #endif
 
 #include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-#include <strings.h>
 
-#include "macros/create_directory.h"
-#include "macros/directory_exists.h"
 #include "macros/help_message.h"
-#include "macros/open_file.h"
-#include "macros/strings.h"
 #include "macros/uint32_le.h"
 #include "macros/xi_macros.h"
+
+#include "macros/strings.h"
+#include "exit_error.h"
+#include "macros/filesystem.h"
