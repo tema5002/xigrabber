@@ -6,6 +6,7 @@
     "Options:\n" \
     "    -o, --output <output_directory>   Specify the output directory (default is the current directory).\n" \
     "    -v, --verbose                     Enable verbose output.\n" \
+    "    -e, --skip-empty                  Skip empty instruments (no samples)\n"\
     "    -h, --help                        Show this help message and exit.\n" \
     "\n" \
     "Examples:\n" \
@@ -16,5 +17,6 @@
     "        ./xigrabber -o /path/to/output song.xm\n" \
     "\n" \
     "    3. Enable verbose output:\n" \
-    "        ./xigrabber -v song.xm\n"
+    "        ./xigrabber -v song.xm\n" \
+    "    -e works the same way.\n"
 #endif
