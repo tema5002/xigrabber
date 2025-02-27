@@ -5,7 +5,7 @@
 ```bash
 git clone https://github.com/tema5002/xigrabber.git
 cd xigrabber
-make xigrabber
+make xigrabber # or xigrabber.exe for windows
 ```
 
 ## Usage
