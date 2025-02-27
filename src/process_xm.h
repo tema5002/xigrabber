@@ -61,7 +61,13 @@ void skip_xm_pattern(file_buffer fb) {
     skip_bytes(fb, packed_size);
 }
 
-void process_xm(const file_buffer fb, STRING input, STRING output, const bool verbose) {
+void process_xm(
+        const file_buffer fb,
+        STRING input,
+        STRING output,
+        const bool verbose,
+        const bool skip_empty_instruments
+) {
     skip_bytes(fb,
         17 // "Extended Module: "
     );
@@ -113,6 +119,11 @@ void process_xm(const file_buffer fb, STRING input, STRING output, const bool ve
         DEBUGC("Reading instrument %u...\n", i + 1);
         xi_instrument inst;
         read_xi_instrument(fb, &inst);
+        if (inst.samples.size == 0 && skip_empty_instruments) {
+            DEBUGC("No samples, skipping.\n");
+            free_xi_instrument(&inst);
+            continue;
+        }
         char* s = "s";
         if (inst.samples.size == 1) s++;
         DEBUGC("Read instrument '%s' with %u sample%s.\n", inst.name, inst.samples.size, s);

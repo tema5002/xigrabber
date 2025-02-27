@@ -1,6 +1,6 @@
 #pragma once
 
-#define XIGRABBER_VERSION "XIGrabber v2.0.0    "
+#define XIGRABBER_VERSION "XIGrabber v2.1.0    "
 #if defined(_WIN32) || defined(_WIN64)
     #define WINDOWS
 #endif

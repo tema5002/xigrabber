@@ -7,7 +7,8 @@ void process_arguments(
         STRING argv[],
         STRING* input,
         STRING* output,
-        bool* verbose
+        bool* verbose,
+        bool* skip_empty_instruments
 ) {
     for (int i = 1; i < *argc; i++) {
         if (ARE_EQ(argv[i], HELP1, HELP2)) {
@@ -20,6 +21,9 @@ void process_arguments(
         }
         else if (ARE_EQ(argv[i], VERBOSE1, VERBOSE2)) {
             *verbose = true;
+        }
+        else if (ARE_EQ(argv[i], SKIPEMPTY1, SKIPEMPTY2)) {
+            *skip_empty_instruments = true;
         }
         else if (argv[i][0] != DASH) {
             *input = argv[i];

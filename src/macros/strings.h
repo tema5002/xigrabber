@@ -42,6 +42,8 @@
     #define OUTPUT2 L"--output"
     #define VERBOSE1 L"-v"
     #define VERBOSE2 L"--verbose"
+    #define SKIPEMPTY1 L"-e"
+    #define SKIPEMPTY2 L"--skip-empty"
 #else
     #define XI_PATH_FORMAT "%s/%s-%02X.xi"
 
@@ -54,6 +56,8 @@
     #define OUTPUT2 "--output"
     #define VERBOSE1 "-v"
     #define VERBOSE2 "--verbose"
+    #define SKIPEMPTY1 "-e"
+    #define SKIPEMPTY2 "--skip-empty"
 #endif
 
 #ifdef WINDOWS

@@ -16,3 +16,6 @@ $(MINGW_TARGET): $(SRCS)
 	$(MINGW_CC) $(SRC) -o $(MINGW_TARGET) $(MINGW_CFLAGS)
 
 all: $(TARGET) $(MINGW_TARGET)
+
+clean:
+	rm $(TARGET) $(MINGW_TARGET)
