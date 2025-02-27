@@ -1,4 +1,4 @@
-CC=x86_64-linux-gnu-gcc
+CC=gcc
 TARGET=xigrabber
 CFLAGS=-Wall -Wextra -Werror -std=c11
 
