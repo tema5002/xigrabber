@@ -1,10 +1,15 @@
 CC=gcc
-TARGET=xigrabber
-CFLAGS=-Wall -Wextra -Werror -std=c11
+X86_64-LINUX-CC=x86_64-linux-gnu-gcc
+AARCH64-LINUX-CC=aarch64-linux-gnu-gcc
+X86_64-W64-CC=x86_64-w64-mingw32-gcc
 
-MINGW_CC=x86_64-w64-mingw32-gcc
-MINGW_TARGET=$(TARGET).exe
-MINGW_CFLAGS=$(CFLAGS) -municode -Wl,--subsystem,console -lshlwapi
+TARGET=xigrabber
+X86_64-LINUX-TARGET=$(TARGET)-x86_64-linux
+AARCH64-LINUX-TARGET=$(TARGET)-aarch64-linux
+X86_64-W64-TARGET=$(TARGET)-x86_64-w64.exe
+
+CFLAGS=-Wall -Wextra -Werror -std=c11
+MINGW_FLAGS=-municode -Wl,--subsystem,console -lshlwapi
 
 SRC=src/main.c
 SRCS=$(SRC) src/*.h
@@ -12,10 +17,16 @@ SRCS=$(SRC) src/*.h
 $(TARGET): $(SRCS)
 	$(CC) $(SRC) -o $(TARGET) $(CFLAGS)
 
-$(MINGW_TARGET): $(SRCS)
-	$(MINGW_CC) $(SRC) -o $(MINGW_TARGET) $(MINGW_CFLAGS)
+$(X86_64-LINUX-TARGET): $(SRCS)
+	$(X86_64-LINUX-CC) $(SRC) -o $(X86_64-LINUX-TARGET) $(CFLAGS)
 
-all: $(TARGET) $(MINGW_TARGET)
+$(AARCH64-LINUX-TARGET): $(SRCS)
+	$(AARCH64-LINUX-CC) $(SRC) -o $(AARCH64-LINUX-TARGET) $(CFLAGS)
+
+$(X86_64-W64-TARGET): $(SRCS)
+	$(X86_64-W64-CC) $(SRC) -o $(X86_64-W64-TARGET) $(CFLAGS) $(MINGW_FLAGS)
+
+all: $(X86_64-LINUX-TARGET) $(AARCH64-LINUX-TARGET) $(X86_64-W64-TARGET)
 
 clean:
-	rm $(TARGET) $(MINGW_TARGET)
+	rm -f $(X86_64-LINUX-TARGET) $(AARCH64-LINUX-TARGET) $(X86_64-W64-TARGET)
