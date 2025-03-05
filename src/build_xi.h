@@ -6,7 +6,10 @@ void build_xi(const xi_instrument* inst, string_buffer* buf) {
     append_to_string_buffer(buf, "Extended Instrument: ", 21);
     append_to_string_buffer(buf, inst->name, INSTRUMENT_NAME_SIZE);
     append_byte_to_string_buffer(buf, 0x1A);
-    append_to_string_buffer(buf, XIGRABBER_VERSION, 20);
+    append_to_string_buffer(buf, XIGRABBER_VERSION_FULL, sizeof(XIGRABBER_VERSION_FULL));
+    for (unsigned long i = 0; i < 20 - sizeof(XIGRABBER_VERSION_FULL); i++) {
+        append_byte_to_string_buffer(buf, 0x00);
+    }
     append_byte_to_string_buffer(buf, 0x02);
     append_byte_to_string_buffer(buf, 0x01);
     append_to_string_buffer(buf, inst->header, XI_HEADER_SIZE);

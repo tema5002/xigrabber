@@ -62,20 +62,19 @@ void skip_xm_pattern(file_buffer fb) {
 }
 
 void process_xm(
-        const file_buffer fb,
-        STRING input,
-        STRING output,
-        const bool verbose,
-        const bool skip_empty_instruments
+        const file_buffer fb
 ) {
     skip_bytes(fb,
         17 // "Extended Module: "
     );
-    {
+    if (arguments.verbose) {
         char name[21];
         read_bytes(fb, name, 20);
         name[20] = '\0';
         DEBUGC("Module loaded: %s\n", name);
+    }
+    else {
+        skip_bytes(fb, 20);
     }
     skip_bytes(fb,
         1 +  // 0x1A
@@ -101,12 +100,12 @@ void process_xm(
     }
     DEBUGC("Skipped %u patterns.\n", patterns)
 
-    input=GET_FILENAME(input);
+    arguments.input = GET_FILENAME(arguments.input);
 
     const size_t dest_size =
-        STRLEN(output) + // %s
+        STRLEN(arguments.output) + // %s
         1 +              // /
-        STRLEN(input) +  // %s
+        STRLEN(arguments.input) +  // %s
         1 +              // -
         2 +              // %02X
         3 +              // .xi
@@ -119,16 +118,22 @@ void process_xm(
         DEBUGC("Reading instrument %u...\n", i + 1);
         xi_instrument inst;
         read_xi_instrument(fb, &inst);
-        if (inst.samples.size == 0 && skip_empty_instruments) {
+        if (!STR_EQ(inst.name, arguments.name)) {
+            DEBUGC("Instrument name is '%s', not '%s'. Skipping.\n", inst.name, arguments.name);
+            free_xi_instrument(&inst);
+            continue;
+        }
+        if (inst.samples.size == 0 && arguments.skip_empty_instruments) {
             DEBUGC("No samples, skipping.\n");
             free_xi_instrument(&inst);
             continue;
         }
+
         char* s = "s";
         if (inst.samples.size == 1) s++;
         DEBUGC("Read instrument '%s' with %u sample%s.\n", inst.name, inst.samples.size, s);
 
-        SPRINT(dest, dest_size, XI_PATH_FORMAT, output, input, i + 1);
+        SPRINT(dest, dest_size, XI_PATH_FORMAT, arguments.output, arguments.input, i + 1);
         DEBUG(SAVING_INSTRUMENT_TEXT, dest);
 
         const size_t bytes = build_xi_and_write_to_file(&inst, dest);

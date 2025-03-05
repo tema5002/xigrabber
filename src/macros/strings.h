@@ -36,28 +36,34 @@
     #define CURRENT_DIR L"."
     #define DASH L'-'
 
-    #define HELP1 L"-h"
-    #define HELP2 L"--help"
-    #define OUTPUT1 L"-o"
-    #define OUTPUT2 L"--output"
-    #define VERBOSE1 L"-v"
-    #define VERBOSE2 L"--verbose"
-    #define SKIPEMPTY1 L"-e"
-    #define SKIPEMPTY2 L"--skip-empty"
+    #define OUTPUT_ARG1 L"-o"
+    #define OUTPUT_ARG2 L"--output"
+    #define VERBOSE_ARG1 L"-v"
+    #define VERBOSE_ARG2 L"--verbose"
+    #define SKIPEMPTY_ARG1 L"-e"
+    #define SKIPEMPTY_ARG2 L"--skip-empty"
+    #define NAME_ARG1 L"-n"
+    #define NAME_ARG2 L"--name"
+    #define VERSION_ARG1 L"--version"
+    #define HELP_ARG1 L"-h"
+    #define HELP_ARG2 L"--help"
 #else
     #define XI_PATH_FORMAT "%s/%s-%02X.xi"
 
     #define CURRENT_DIR "."
     #define DASH '-'
 
-    #define HELP1 "-h"
-    #define HELP2 "--help"
-    #define OUTPUT1 "-o"
-    #define OUTPUT2 "--output"
-    #define VERBOSE1 "-v"
-    #define VERBOSE2 "--verbose"
-    #define SKIPEMPTY1 "-e"
-    #define SKIPEMPTY2 "--skip-empty"
+    #define OUTPUT_ARG1 "-o"
+    #define OUTPUT_ARG2 "--output"
+    #define VERBOSE_ARG1 "-v"
+    #define VERBOSE_ARG2 "--verbose"
+    #define SKIPEMPTY_ARG1 "-e"
+    #define SKIPEMPTY_ARG2 "--skip-empty"
+    #define NAME_ARG1 "-n"
+    #define NAME_ARG2 "--name"
+    #define VERSION_ARG1 "--version"
+    #define HELP_ARG1 "-h"
+    #define HELP_ARG2 "--help"
 #endif
 
 #ifdef WINDOWS
@@ -78,6 +84,6 @@
     #define STRLEN strlen
 #endif
 
-#define ARE_EQ(arg, arg1, arg2) ((arg) && ((STRCMP(arg, arg1) == 0) || (STRCMP(arg, arg2) == 0)))
-#define DEBUG(...) if (verbose) { PRINT(__VA_ARGS__); }
-#define DEBUGC(...) if (verbose) { printf(__VA_ARGS__); }
+#define STR_EQ(arg, arg1) (strcmp(arg, arg1) == 0)
+#define IS_EQ(arg, arg1) (STRCMP(arg, arg1) == 0)
+#define ARE_EQ(arg, arg1, arg2) (IS_EQ(arg, arg1) || IS_EQ(arg, arg2))

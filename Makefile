@@ -8,7 +8,7 @@ X86_64-LINUX-TARGET=$(TARGET)-x86_64-linux
 AARCH64-LINUX-TARGET=$(TARGET)-aarch64-linux
 X86_64-W64-TARGET=$(TARGET)-x86_64-w64.exe
 
-CFLAGS=-Wall -Wextra -Werror -std=c11
+CFLAGS=-Wall -Wextra -Werror -std=c99
 MINGW_FLAGS=-municode -Wl,--subsystem,console -lshlwapi
 
 SRC=src/main.c
