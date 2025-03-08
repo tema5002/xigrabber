@@ -7,8 +7,7 @@ static struct {
     STRING output;
     bool verbose;
     bool skip_empty_instruments;
-    char name[23];
-    bool name_used;
+    char name[23]; // last byte == 0 means it is used
 } arguments;
 
 void init_arguments() {
@@ -16,8 +15,7 @@ void init_arguments() {
     arguments.output = CURRENT_DIR;
     arguments.verbose = false;
     arguments.skip_empty_instruments = false;
-    arguments.name[0] = '\0';
-    arguments.name_used = false;
+    arguments.name[22] = '\xFF';
 }
 
 #define DEBUG(...) if (arguments.verbose) { PRINT(__VA_ARGS__); }
@@ -44,7 +42,7 @@ void process_arguments(
             arguments.output = argv[++i];
         }
         else if (ARE_EQ(argv[i], NAME_ARG1, NAME_ARG2) && i + 1 < *argc) {
-            arguments.name_used = true;
+            arguments.name[22] = '\0';
             i++;
             size_t j;
             for (j = 0; j < 22 && argv[i][j] != '\0'; j++) {

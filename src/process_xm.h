@@ -118,7 +118,7 @@ void process_xm(
         DEBUGC("Reading instrument %u...\n", i + 1);
         xi_instrument inst;
         read_xi_instrument(fb, &inst);
-        if (!STR_EQ(inst.name, arguments.name)) {
+        if (arguments.name[22] == '\0' && !STR_EQ(inst.name, arguments.name)) {
             DEBUGC("Instrument name is '%s', not '%s'. Skipping.\n", inst.name, arguments.name);
             free_xi_instrument(&inst);
             continue;
