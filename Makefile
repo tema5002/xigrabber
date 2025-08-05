@@ -1,32 +1,14 @@
-CC=gcc
-X86_64-LINUX-CC=x86_64-linux-gnu-gcc
-AARCH64-LINUX-CC=aarch64-linux-gnu-gcc
-X86_64-W64-CC=x86_64-w64-mingw32-gcc
+CC := clang
+CFLAGS := -Wall -Wextra -Werror -std=gnu99
+TARGET := xigrabber
+SRC := xigrabber.c
 
-TARGET=xigrabber
-X86_64-LINUX-TARGET=$(TARGET)-x86_64-linux
-AARCH64-LINUX-TARGET=$(TARGET)-aarch64-linux
-X86_64-W64-TARGET=$(TARGET)-x86_64-w64.exe
+.PHONY: all clean
 
-CFLAGS=-Wall -Wextra -Werror -std=c99
-MINGW_FLAGS=-municode -Wl,--subsystem,console -lshlwapi
+all: $(TARGET)
 
-SRC=src/main.c
-SRCS=$(SRC) src/*.h
-
-$(TARGET): $(SRCS)
-	$(CC) $(SRC) -o $(TARGET) $(CFLAGS)
-
-$(X86_64-LINUX-TARGET): $(SRCS)
-	$(X86_64-LINUX-CC) $(SRC) -o $(X86_64-LINUX-TARGET) $(CFLAGS)
-
-$(AARCH64-LINUX-TARGET): $(SRCS)
-	$(AARCH64-LINUX-CC) $(SRC) -o $(AARCH64-LINUX-TARGET) $(CFLAGS)
-
-$(X86_64-W64-TARGET): $(SRCS)
-	$(X86_64-W64-CC) $(SRC) -o $(X86_64-W64-TARGET) $(CFLAGS) $(MINGW_FLAGS)
-
-all: $(X86_64-LINUX-TARGET) $(AARCH64-LINUX-TARGET) $(X86_64-W64-TARGET)
+$(TARGET): $(SRC)
+	$(CC) $(SRC) -o $@ $(CFLAGS)
 
 clean:
-	rm -f $(X86_64-LINUX-TARGET) $(AARCH64-LINUX-TARGET) $(X86_64-W64-TARGET)
+	$(RM) $(TARGET)
