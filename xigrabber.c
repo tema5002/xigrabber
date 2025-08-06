@@ -1,5 +1,5 @@
 // fucking windows
-#define XIGRABBER_VERSION "2.3"
+#define XIGRABBER_VERSION "2.3.1"
 #define XIGRABBER_VERSION_FULL "XIGrabber v" XIGRABBER_VERSION
 #if defined(_WIN32) || defined(_WIN64)
 #define WINDOWS
@@ -160,7 +160,7 @@ typedef struct file_buffer {
 static file_buffer create_file_buffer(STRING filename) {
 #ifdef WINDOWS
     HANDLE file = CreateFile(filename, GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-    if (file == INVALID_HANDLE_VALUE) exit_error(_("Failed to open '" FMT_STR "'."), filename);
+    if (file == INVALID_HANDLE_VALUE) exit_error(_("Failed to open '" FMT_STR "'.\n"), filename);
 
     LARGE_INTEGER filesize_li;
     GetFileSizeEx(file, &filesize_li);
@@ -178,12 +178,12 @@ static file_buffer create_file_buffer(STRING filename) {
     );
 
     if (!result || bytesRead != filesize)
-        exit_error(_("Error: reached end of the file"));
+        exit_error(_("Error: reached end of the file\n"));
 
     CloseHandle(file);
 #else
     FILE* file = fopen(filename, "r");
-    if (file == INVALID_HANDLE_VALUE) exit_error(_("Failed to open '" FMT_STR "'."), filename);
+    if (file == INVALID_HANDLE_VALUE) exit_error(_("Failed to open '" FMT_STR "'.\n"), filename);
 
     fseek(file, 0, SEEK_END);
     const unsigned long filesize = ftell(file);
@@ -191,7 +191,7 @@ static file_buffer create_file_buffer(STRING filename) {
 
     uint8_t* buffer = malloc(filesize);
 
-    if (fread(buffer, 1, filesize, file) != filesize) exit_error(_("Error: reached end of the file"));
+    if (fread(buffer, 1, filesize, file) != filesize) exit_error(_("Error: reached end of the file\n"));
 
     fclose(file);
 #endif
@@ -212,7 +212,7 @@ static void destroy_file_buffer(file_buffer fb) {
 
 static uint8_t read_uint8(file_buffer* fb) {
     if (fb->pos >= fb->end) {
-        exit_error(_("Error: reached end of the file"));
+        exit_error(_("Error: reached end of the file\n"));
     }
     return *fb->pos++;
 }
@@ -231,14 +231,14 @@ static uint32_t read_uint32(file_buffer* fb) {
 
 static void skip_bytes(file_buffer* fb, const unsigned int b) {
     if (fb->pos + b > fb->end) {
-        exit_error(_("Error: reached end of the file"));
+        exit_error(_("Error: reached end of the file\n"));
     }
     fb->pos += b;
 }
 
 static void read_bytes(file_buffer* fb, void* s, const size_t size) {
     if (fb->pos + size > fb->end) {
-        exit_error(_("Error: reached end of the file"));
+        exit_error(_("Error: reached end of the file\n"));
     }
     memcpy(s, fb->pos, size);
     fb->pos += size;
@@ -311,7 +311,7 @@ static size_t build_xi_and_write_to_file(const xi_instrument* inst, STRING dest)
     FILE* file = fopen(dest, "w");
 #endif
     if (file == INVALID_HANDLE_VALUE)
-        exit_error(_("Failed to open '" FMT_STR "'."), dest);
+        exit_error(_("Failed to open '" FMT_STR "'.\n"), dest);
 
 #ifdef WINDOWS
     DWORD bytesWritten;
@@ -320,7 +320,7 @@ static size_t build_xi_and_write_to_file(const xi_instrument* inst, STRING dest)
 #else
     if (fwrite(buffer, 1, size, file) != size) {
 #endif
-        exit_error(_("Error writing to file"));
+        exit_error(_("Error writing to file\n"));
     }
 
 #ifdef WINDOWS
@@ -440,7 +440,7 @@ static void process_xm(file_buffer* fb) {
     for (int i = 0; i < patterns; i++) {
         skip_xm_pattern(fb);
     }
-    DEBUG(_("Skipped %u patterns."), patterns)
+    DEBUG(_("Skipped %u patterns.\n"), patterns)
 
 #ifdef WINDOWS
     arguments.input = PathFindFileName(arguments.input);
@@ -481,7 +481,7 @@ static void process_xm(file_buffer* fb) {
         if (inst.samples.size == 1) s++;
         DEBUG(_("Read instrument '%s' with %u sample%s.\n"), inst.name, inst.samples.size, s);
 
-        SPRINT(dest, dest_size, _("" FMT_STR "/" FMT_STR "-%02X.xi\n"), arguments.output, arguments.input, i + 1);
+        SPRINT(dest, dest_size, _("" FMT_STR "/" FMT_STR "-%02X.xi"), arguments.output, arguments.input, i + 1);
         DEBUG(_("Saving instrument to '" FMT_STR "'...\n"), dest);
 
         const size_t bytes = build_xi_and_write_to_file(&inst, dest);
